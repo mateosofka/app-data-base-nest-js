@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { FacturaDto } from './dto/factura.dto';
@@ -45,8 +46,16 @@ export class AppController {
     return this.appService.createRpository(newFactura);
   }
 
+  @Put(':id')
+  async updateFactura(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() factura: FacturaDto,
+  ): Promise<boolean> {
+    return await this.appService.update(id, new FacturaEntity(factura));
+  }
+
   @Delete(':id')
-  removeFactura(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  removeFactura(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
     return this.appService.remove(id);
   }
 }

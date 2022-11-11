@@ -50,7 +50,23 @@ export class AppService {
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<boolean> {
     await this.facturaRepository.delete(id);
+    return true;
+  }
+
+  async update(id: number, newfactura: FacturaEntity): Promise<boolean> {
+    const factura = await this.dataSource
+      .createQueryBuilder()
+      .update(FacturaEntity)
+      .set({
+        clienteNombre: newfactura.clienteNombre,
+        clienteCorreo: newfactura.clienteCorreo,
+      })
+      .where('id = :id', { id: id })
+      .execute();
+    const test = Promise.resolve(factura);
+    console.log('test :>> ', test);
+    return true;
   }
 }
