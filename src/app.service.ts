@@ -1,14 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { FacturaEntity } from './entities/factura.entity';
 
 @Injectable()
 export class AppService {
-  constructor(private dataSource: DataSource) {}
-
-  getHello(): string {
-    return 'Hello World!';
-  }
+  constructor(
+    private dataSource: DataSource,
+    @InjectRepository(FacturaEntity)
+    private readonly facturaRepository: Repository<FacturaEntity>,
+  ) {}
 
   async create(factura: FacturaEntity): Promise<FacturaEntity> {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -26,5 +27,30 @@ export class AppService {
         HttpStatus.CONFLICT,
       );
     }
+  }
+
+  createRpository(createfactura: FacturaEntity): Promise<FacturaEntity> {
+    return this.facturaRepository.save(createfactura);
+  }
+
+  async findAll(): Promise<FacturaEntity[]> {
+    return this.facturaRepository.find({
+      relations: {
+        detalleFactura: true,
+      },
+    });
+  }
+
+  async findOne(id: number): Promise<FacturaEntity | null> {
+    return this.facturaRepository.findOne({
+      where: { id: id },
+      relations: {
+        detalleFactura: true,
+      },
+    });
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.facturaRepository.delete(id);
   }
 }
