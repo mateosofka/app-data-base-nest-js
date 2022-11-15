@@ -14,7 +14,7 @@ import { AppService } from './app.service';
 import { FacturaDto } from './dto/factura.dto';
 import { FacturaEntity } from './entities/factura.entity';
 
-@Controller()
+@Controller('api/factura')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

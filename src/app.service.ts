@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, UpdateResult } from 'typeorm';
 import { FacturaEntity } from './entities/factura.entity';
+import { FacturaDto } from './dto/factura.dto';
+import { PatchFacturaDto } from './dto/patch-factura.dto';
 
 @Injectable()
 export class AppService {
@@ -62,6 +64,7 @@ export class AppService {
       .set({
         clienteNombre: newfactura.clienteNombre,
         clienteCorreo: newfactura.clienteCorreo,
+        detalleFactura: newfactura.detalleFactura,
       })
       .where('id = :id', { id: id })
       .execute();
@@ -69,4 +72,22 @@ export class AppService {
     console.log('test :>> ', test);
     return true;
   }
+
+  /*async patch(id: number, newfactura: PatchFacturaDto): Promise<boolean> {
+    const oldfactura = await this.facturaRepository.findOne({
+      where: { id: id },
+      relations: {
+        detalleFactura: true,
+      },
+    });
+
+    if (oldfactura) {
+      const updatedfactura: FacturaEntity = {
+        ...oldfactura,
+        ...newfactura,
+      };
+      const save: this.facturaRepository.update(updatedfactura);
+    }
+    return false;
+  }*/
 }
