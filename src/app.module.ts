@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { FacturaController } from './controllers/factura.controller';
+import { FacturaService } from './services/factura.service';
 import { DetalleFacturaEntity } from './entities/detalle-factura.entity';
 import { FacturaEntity } from './entities/factura.entity';
 
@@ -19,7 +19,7 @@ import { FacturaEntity } from './entities/factura.entity';
     }),
     TypeOrmModule.forFeature([FacturaEntity, DetalleFacturaEntity]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [FacturaController],
+  providers: [FacturaService],
 })
 export class AppModule {}

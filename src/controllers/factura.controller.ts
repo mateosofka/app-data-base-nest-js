@@ -9,14 +9,18 @@ import {
   HttpStatus,
   Delete,
   Put,
+  Patch,
 } from '@nestjs/common';
-import { AppService } from './app.service';
-import { FacturaDto } from './dto/factura.dto';
-import { FacturaEntity } from './entities/factura.entity';
+import { FacturaService } from '../services/factura.service';
+import { FacturaDto } from '../dto/factura.dto';
+import { FacturaEntity } from '../entities/factura.entity';
+import { PatchFacturaDto } from '../dto/patch-factura.dto';
+import { FacturaDetalleDto } from 'src/dto/factura-detalle.dto';
+import { DetalleFacturaEntity } from '../entities/detalle-factura.entity';
 
 @Controller('api/factura')
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class FacturaController {
+  constructor(private readonly appService: FacturaService) {}
 
   @Get()
   getAllFacturas(): Promise<FacturaEntity[]> {
@@ -46,6 +50,17 @@ export class AppController {
     return this.appService.createRpository(newFactura);
   }
 
+  @Put('/detalle/:detalleId')
+  async updateDetalleFactura(
+    @Param('detalleId', ParseIntPipe) detalleId: number,
+    @Body() facturaDetalle: FacturaDetalleDto,
+  ): Promise<boolean> {
+    return await this.appService.updateDetail(
+      detalleId,
+      new DetalleFacturaEntity(facturaDetalle),
+    );
+  }
+
   @Put(':id')
   async updateFactura(
     @Param('id', ParseIntPipe) id: number,
@@ -57,5 +72,13 @@ export class AppController {
   @Delete(':id')
   removeFactura(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
     return this.appService.remove(id);
+  }
+
+  @Patch(':id')
+  async updateSingleFieldFactura(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() factura: PatchFacturaDto,
+  ): Promise<boolean> {
+    return await this.appService.patch(id, factura);
   }
 }
