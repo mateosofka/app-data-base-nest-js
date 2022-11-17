@@ -15,7 +15,7 @@ import { FacturaService } from '../services/factura.service';
 import { FacturaDto } from '../dto/factura.dto';
 import { FacturaEntity } from '../entities/factura.entity';
 import { PatchFacturaDto } from '../dto/patch-factura.dto';
-import { FacturaDetalleDto } from 'src/dto/factura-detalle.dto';
+import { FacturaDetalleDto } from '../dto/factura-detalle.dto';
 import { DetalleFacturaEntity } from '../entities/detalle-factura.entity';
 
 @Controller('api/factura')
