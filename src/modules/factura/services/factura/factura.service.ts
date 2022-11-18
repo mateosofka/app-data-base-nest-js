@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { FacturaEntity } from '../entities/factura.entity';
-import { PatchFacturaDto } from '../dto/patch-factura.dto';
-import { DetalleFacturaEntity } from '../entities/detalle-factura.entity';
+import { FacturaEntity } from '../../storage/databases/mysql/entities/factura.entity';
+import { PatchFacturaDto } from '../../storage/dto/patch-factura.dto';
 
 @Injectable()
 export class FacturaService {
@@ -107,31 +106,5 @@ export class FacturaService {
       return true;
     }
     return false;
-  }
-
-  async updateDetail(
-    detalleId: number,
-    detalle: DetalleFacturaEntity,
-  ): Promise<boolean> {
-    const queryBuilder = this.dataSource.createQueryBuilder();
-    try {
-      await queryBuilder // poner nombre tab
-        .update(DetalleFacturaEntity)
-        .set({
-          //pasar mejor detalle como objeto
-          producto: detalle.producto,
-          cantidad: detalle.cantidad,
-          precio: detalle.precio,
-          total: detalle.total,
-        })
-        .where('dtl_id = :id', { id: detalleId })
-        .execute();
-      return true;
-    } catch (error) {
-      throw new HttpException(
-        'Tenemos problemas editando el detalle',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
   }
 }

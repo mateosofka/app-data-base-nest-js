@@ -1,4 +1,4 @@
-import { FacturaDetalleDto } from '../dto/factura-detalle.dto';
+import { FacturaDetalleDto } from '../../../dto/factura-detalle.dto';
 import {
   Column,
   Entity,

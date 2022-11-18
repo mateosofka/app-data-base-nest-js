@@ -10,15 +10,23 @@ import {
   Delete,
   Put,
   Patch,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { FacturaService } from '../services/factura.service';
-import { FacturaDto } from '../dto/factura.dto';
-import { FacturaEntity } from '../entities/factura.entity';
-import { PatchFacturaDto } from '../dto/patch-factura.dto';
-import { FacturaDetalleDto } from '../dto/factura-detalle.dto';
-import { DetalleFacturaEntity } from '../entities/detalle-factura.entity';
+import { FacturaService } from '../../services/factura/factura.service';
+import { FacturaDto } from '../../storage/dto/factura.dto';
+import { FacturaEntity } from '../../storage/databases/mysql/entities/factura.entity';
+import { PatchFacturaDto } from '../../storage/dto/patch-factura.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('api/factura')
+@UsePipes(
+  new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+)
 export class FacturaController {
   constructor(private readonly appService: FacturaService) {}
 
@@ -48,17 +56,6 @@ export class FacturaController {
   createFacturaRepository(@Body() factura: FacturaDto): Promise<FacturaEntity> {
     const newFactura = new FacturaEntity(factura);
     return this.appService.createRpository(newFactura);
-  }
-
-  @Put('/detalle/:detalleId')
-  async updateDetalleFactura(
-    @Param('detalleId', ParseIntPipe) detalleId: number,
-    @Body() facturaDetalle: FacturaDetalleDto,
-  ): Promise<boolean> {
-    return await this.appService.updateDetail(
-      detalleId,
-      new DetalleFacturaEntity(facturaDetalle),
-    );
   }
 
   @Put(':id')
