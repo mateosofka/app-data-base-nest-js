@@ -3,6 +3,7 @@ import {
   Controller,
   Param,
   ParseIntPipe,
+  Post,
   Put,
   UseGuards,
   UsePipes,
@@ -25,6 +26,18 @@ export class DetalleFacturaController {
   constructor(
     private readonly detalleFacturaFacturaService: DetalleFacturaService,
   ) {}
+
+  @Post(':facturaId')
+  @UseGuards(TokenGuard)
+  async addDetalleFactura(
+    @Param('facturaId', ParseIntPipe) facturaId: number,
+    @Body() facturaDetalleDto: FacturaDetalleDto,
+  ): Promise<boolean> {
+    return await this.detalleFacturaFacturaService.addDetail({
+      ...facturaDetalleDto,
+      facturaId,
+    });
+  }
 
   @Put(':detalleId')
   @UseGuards(TokenGuard)

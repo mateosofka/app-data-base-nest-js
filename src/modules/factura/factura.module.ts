@@ -7,6 +7,7 @@ import { FacturaEntity } from './storage/databases/mysql/entities/factura.entity
 import { FacturaService } from './services/factura/factura.service';
 import { DetalleFacturaService } from './services/detalle-factura/detalle-factura.service';
 import { ConfigService } from '@nestjs/config';
+import { DetalleFacturaMapper } from './storage/mappers/detalle-factura.mapper';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { ConfigService } from '@nestjs/config';
     TypeOrmModule.forFeature([FacturaEntity, DetalleFacturaEntity]),
   ],
   controllers: [FacturaController, DetalleFacturaController],
-  providers: [FacturaService, DetalleFacturaService],
+  providers: [FacturaService, DetalleFacturaService, DetalleFacturaMapper],
 })
 export class FacturaModule {}

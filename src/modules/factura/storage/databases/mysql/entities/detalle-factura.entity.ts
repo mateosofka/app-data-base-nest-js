@@ -1,4 +1,3 @@
-import { FacturaDetalleDto } from '../../../dto/factura-detalle.dto';
 import {
   Column,
   Entity,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { FacturaEntity } from './factura.entity';
+import { DetalleFactura } from '../../../../models/detalle-factura';
 
 @Index('fk_tbl_detalle_factura_tbl_factura', ['facturaId'], {})
 @Entity('tbl_detalle_factura', { schema: 'facturacion' })
@@ -38,7 +38,8 @@ export class DetalleFacturaEntity {
   @JoinColumn([{ name: 'factura_id', referencedColumnName: 'id' }])
   factura: FacturaEntity;
 
-  constructor(detalleFactura?: FacturaDetalleDto) {
+  constructor(detalleFactura?: DetalleFactura) {
+    if (detalleFactura?.facturaId) this.facturaId = detalleFactura?.facturaId;
     if (detalleFactura?.producto) this.producto = detalleFactura?.producto;
     if (detalleFactura?.cantidad) this.cantidad = detalleFactura?.cantidad;
     if (detalleFactura?.precio) this.precio = detalleFactura?.precio;
