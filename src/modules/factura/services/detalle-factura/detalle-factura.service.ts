@@ -1,31 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { DetalleFacturaEntity } from '../../storage/databases/mysql/entities/detalle-factura.entity';
 import { CreateFacturaDetalleDto } from '../../storage/dto/create-factura-detalle.dto';
+import { FacturaDetalleDto } from '../../storage/dto/factura-detalle.dto';
 import { DetalleFacturaMapper } from '../../storage/mappers/detalle-factura.mapper';
 
 @Injectable()
 export class DetalleFacturaService {
   constructor(
-    private dataSource: DataSource,
+    @InjectRepository(DetalleFacturaEntity)
+    private readonly repository: Repository<DetalleFacturaEntity>,
     private mapper: DetalleFacturaMapper,
   ) {}
 
   async addDetail(detalleDto: CreateFacturaDetalleDto): Promise<boolean> {
-    const queryBuilder = this.dataSource.createQueryBuilder();
     try {
       const detalle = this.mapper.map(detalleDto);
-      await queryBuilder
-        .insert()
-        .into(DetalleFacturaEntity)
-        .values({
-          facturaId: detalle.facturaId,
-          producto: detalle.producto,
-          cantidad: detalle.cantidad,
-          precio: detalle.precio,
-          total: detalle.total,
-        })
-        .execute();
+      const result = this.repository.save(detalle);
+      console.log('result', result);
       return true;
     } catch (error) {
       console.error(error);
@@ -38,9 +31,9 @@ export class DetalleFacturaService {
 
   async updateDetail(
     detalleId: number,
-    detalle: DetalleFacturaEntity,
+    detalle: FacturaDetalleDto,
   ): Promise<boolean> {
-    const queryBuilder = this.dataSource.createQueryBuilder();
+    const queryBuilder = this.repository.createQueryBuilder();
     try {
       await queryBuilder // poner nombre tab
         .update(DetalleFacturaEntity)

@@ -47,7 +47,7 @@ export class DetalleFacturaController {
   ): Promise<boolean> {
     return await this.detalleFacturaFacturaService.updateDetail(
       detalleId,
-      new DetalleFacturaEntity(facturaDetalle),
+      facturaDetalle,
     );
   }
 }
